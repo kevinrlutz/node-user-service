@@ -14,10 +14,12 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
+        required: true,
         trim: true
     },
     age: {
         type: Number,
+        required: true,
         default: 0,
         min: 0,
         max: 120,
@@ -49,6 +51,12 @@ const userSchema = new mongoose.Schema({
             }
         }
     }
+})
+
+userSchema.virtual('appointments', {
+    ref: 'Appointment',
+    localField: '_id',
+    foreignField: 'userId'
 })
 
 const User = mongoose.model('User', userSchema)
