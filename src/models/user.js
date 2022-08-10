@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 0,
-        min: 0,
         max: 120,
         validate(value) {
             if (value < 0) {
