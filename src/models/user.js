@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const Appointment = require('./Appointment')
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -56,6 +57,13 @@ userSchema.virtual('appointments', {
     ref: 'Appointment',
     localField: '_id',
     foreignField: 'userId'
+})
+
+// Delete user appointments when user is deleted
+userSchema.pre('remove', async function(next) {
+    const user = this
+    await Appointment.deleteMany({ userId: user._id })
+    next()
 })
 
 const User = mongoose.model('User', userSchema)
