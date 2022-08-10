@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const Appointment = require('./Appointment')
+const Appointment = require('./appointment')
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -51,6 +51,8 @@ const userSchema = new mongoose.Schema({
             }
         }
     }
+}, {
+    timestamps: true
 })
 
 userSchema.virtual('appointments', {
