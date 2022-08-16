@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/user')
+const Appointment = require('../models/appointment')
 const router = new express.Router()
 
 router.post('/users', async (req, res) => {
@@ -39,7 +40,7 @@ router.get('/users/:id', async (req, res) => {
     }
 })
 
-router.get('/users/search/:lastName', async (req, res) => {
+router.get('/users/searchByLastName/:lastName', async (req, res) => {
     const lastName = req.params.lastName
 
     try {
@@ -55,7 +56,7 @@ router.get('/users/search/:lastName', async (req, res) => {
     }
 })
 
-router.get('/users/search/:email', async (req, res) => {
+router.get('/users/searchByEmail/:email', async (req, res) => {
     const email = req.params.email
 
     try {
@@ -95,14 +96,17 @@ router.patch('/users/:id', async (req, res) => {
 
 router.delete('/users/:id', async (req, res) => {
     try {
+        await Appointment.deleteMany({ userId: req.params.id })
+        console.log('Appointments deleted!')
+
         const user = await User.findByIdAndDelete(req.params.id)
+        console.log('User deleted!')
 
         if (!user) {
             return res.status(404).send()
         }
 
         res.send(user)
-        console.log('User deleted!')
     } catch (error) {
         res.status(500).send(error)
         console.log('User not deleted!')

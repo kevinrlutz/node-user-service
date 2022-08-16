@@ -61,13 +61,6 @@ userSchema.virtual('appointments', {
     foreignField: 'userId'
 })
 
-// Delete user appointments when user is deleted
-userSchema.pre('remove', async function(next) {
-    const user = this
-    await Appointment.deleteMany({ userId: user._id })
-    next()
-})
-
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
