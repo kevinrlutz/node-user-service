@@ -70,8 +70,10 @@ router.delete('/users/:id', async (req, res) => {
         }
 
         res.send(user)
+        console.log('User deleted!')
     } catch (error) {
         res.status(500).send(error)
+        console.log('User not deleted!')
     }
 })
 
