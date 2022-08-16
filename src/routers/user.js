@@ -39,6 +39,38 @@ router.get('/users/:id', async (req, res) => {
     }
 })
 
+router.get('/users/search/:lastName', async (req, res) => {
+    const lastName = req.params.lastName
+
+    try {
+        const users = await User.find({ lastName })
+
+        if (users.length === 0) {
+            return res.status(404).send()
+        }
+
+        res.send(users)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+router.get('/users/search/:email', async (req, res) => {
+    const email = req.params.email
+
+    try {
+        const users = await User.find({ email })
+
+        if (users.length === 0) {
+            return res.status(404).send()
+        }
+
+        res.send(users)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 router.patch('/users/:id', async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['firstName', 'lastName', 'gender', 'age', 'email', 'phoneNumber']
