@@ -20,6 +20,10 @@ beforeEach(async () => {
     await new User(testUser).save()
 })
 
+afterAll(async () => {
+    mongoose.connection.close()
+})
+
 test('create a new user', async () => {
     const response = await request(app)
         .post('/users')
@@ -57,9 +61,59 @@ test('update existing user', async () => {
         .patch('/users/' + testUser._id.toString())
         .send({
             firstName: 'Mike',
+            age: 25
         })
         .expect(200)
 
     const user = await User.findById(testUser._id)
     expect(user.firstName).toEqual('Mike')
+    expect(user.age).toEqual(25)
+})
+
+test('find user by last name (search)', async () => {
+    const response = await request(app)
+        .get('/users/searchByLastName/' + testUser.lastName)
+        .expect(200)
+
+    expect(response.body).not.toBeNull()
+})
+
+test('does not find user by last name (search)', async () => {
+    const response = await request(app)
+        .get('/users/searchByLastName/' + 'test')
+        .expect(404)
+
+    expect(response.body).toEqual({})
+})
+
+test('find user by email (search)', async () => {
+    const response = await request(app)
+        .get('/users/searchByEmail/' + testUser.email)
+        .expect(200)
+
+    expect(response.body).not.toBeNull()
+})
+
+test('does not find user by email (search)', async () => {
+    const response = await request(app)
+        .get('/users/searchByEmail/' + 'test@email.com')
+        .expect(404)
+
+    expect(response.body).toEqual({})
+})
+
+test('delete an existing user by id', async () => {
+	const res = await request(app)
+		.delete('/users/' + testUserId.toString())
+		.expect(200)
+
+	const deletedUser = await User.findById(testUserId)
+
+	expect(deletedUser).toBeNull()
+})
+
+test('does not delete non-existent user', async () => {
+	const res = await request(app)
+		.delete('/users/' + new mongoose.Types.ObjectId().toString())
+		.expect(404)
 })
