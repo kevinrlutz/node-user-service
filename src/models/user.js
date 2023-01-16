@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
       validate(value) {
-        if (!validator.isMobilePhone(value)) {
+        if (!/[0-9]{3}-[0-9]{3}-[0-9]{4}/.test(value)) {
           throw new Error("Phone number is invalid!");
         }
       },

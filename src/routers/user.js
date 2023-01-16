@@ -8,10 +8,11 @@ router.post("/users", async (req, res) => {
   try {
     await user.save();
     res.status(201).send(user);
-    console.log("User saved!");
+    console.log("User saved");
   } catch (error) {
     res.status(400).send(error);
-    console.log("User not saved!");
+    console.log("User not saved:");
+    console.log(error);
   }
 });
 
@@ -109,10 +110,10 @@ router.patch("/users/:id", async (req, res) => {
 router.delete("/users/:id", async (req, res) => {
   try {
     await Appointment.deleteMany({ userId: req.params.id });
-    console.log("Appointments deleted!");
+    console.log("Appointments deleted");
 
     const user = await User.findByIdAndDelete(req.params.id);
-    console.log("User deleted!");
+    console.log("User deleted");
 
     if (!user) {
       return res.status(404).send();
@@ -121,7 +122,7 @@ router.delete("/users/:id", async (req, res) => {
     res.send(user);
   } catch (error) {
     res.status(500).send(error);
-    console.log("User not deleted!");
+    console.log("User not deleted", error);
   }
 });
 
